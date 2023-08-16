@@ -1,0 +1,54 @@
+.wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 100px;
+
+    > section {
+        border: 1px solid;
+        padding: 10px 20px;
+        border-radius: 8px;
+        --bs-bg-opacity: 0.1;
+
+        & ~ section {
+            margin-top: 10px;
+        }
+    }
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+
+    & ~ & {
+        margin-top: 10px;
+    }
+
+    > label {
+        width: 150px;
+        min-width: 150px;
+    }
+
+    &-field {
+        flex: 1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3px;
+        max-width: 550px;
+    }
+
+    &-info {
+        min-width: 250px;
+        width: 250px;
+        margin-left: 5px;
+    }
+}
+
+.label-inp-img {
+    display: flex;
+    border: 1px solid #84c52c;
+    border-radius: 5px;
+    width: fit-content;
+    color: #84c52c;
+    cursor: pointer;
+    padding: 5px 10px;
+}

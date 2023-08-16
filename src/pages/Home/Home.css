@@ -1,0 +1,23 @@
+.main_body{
+    width: 100%;
+    margin: 0 auto;
+}
+.body_wrapper{
+    padding:150px;
+}
+.marker{
+    position: relative !important;
+}
+.marker:after {
+    content: "";
+    width: 125px;
+    height: 30px;
+    position: absolute;
+    bottom: -28px;
+    right: -30px;
+    background-image: url(https://demo.templateflip.com/super/images/marker.svg);
+    background-repeat: no-repeat;
+   
+    left: 50%;
+    margin-left: -60px;
+}

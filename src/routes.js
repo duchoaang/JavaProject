@@ -1,8 +1,9 @@
 import { lazy } from 'react';
 
 
-const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
-const Home = lazy(() => import('@pages/Home'));
+import DefaultLayout from './layout/DefaultLayout'
+import Home  from '@pages/Home'
+import Upload  from '@pages/Upload'
 
 
 const routes = [
@@ -10,7 +11,12 @@ const routes = [
         path: '/',
         component: Home,
         layout: DefaultLayout,
-    }
+    },
+    {
+        path: '/upload',
+        component: Upload,
+        layout: DefaultLayout,
+    },
    
 ];
 

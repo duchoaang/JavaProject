@@ -45,43 +45,7 @@ const SubMenu = ({ data }) => {
         </li>
     );
 };
-const MENU_ITEM = [
-    {
-        icon: 'apps',
-        title: 'Tất cả môn học',
-        subItem: [],
-    },
-    {
-        icon: 'business_center',
-        title: 'Việc kinh doanh',
-        subItem: [],
-    },
-    {
-        icon: 'public',
-        title: 'Nhân văn',
-        subItem: [],
-    },
-    {
-        icon: 'calculate',
-        title: 'Toán học',
-        subItem: [],
-    },
-    {
-        icon: 'terminal',
-        title: 'Lập trình',
-        subItem: ['Lập trình C/C++', 'Lập trình Python', 'Lập trình Java', 'Lập trình JavaScript'],
-    },
-    {
-        icon: 'science',
-        title: 'Khoa học',
-        subItem: [],
-    },
-    {
-        icon: 'create',
-        title: 'Viết',
-        subItem: [],
-    },
-];
+
 const ModalWrapper = ({ show, children }) => {
     return <div className={cx('modal-wrapper', { show })}>{children}</div>;
 };
@@ -540,7 +504,7 @@ const Header = () => {
                 </div>
 
                 <div className={cx('actions')}>
-                    {user ? (
+                    {true ? (
                         <>
                             <Link to="/upload">
                                 <Button className="me-5 btn btn-warning border">Tải lên</Button>
@@ -589,11 +553,7 @@ const Header = () => {
                     )}
                 </div>
             </header>
-            <ul className={cx('menu', 'd-flex justify-content-around mt-2')}>
-                {MENU_ITEM.map((item, index) => (
-                    <SubMenu key={index} data={item} />
-                ))}
-            </ul>
+            
         </>
     );
 };

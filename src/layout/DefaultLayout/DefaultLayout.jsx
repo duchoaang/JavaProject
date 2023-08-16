@@ -6,7 +6,7 @@ function DefaultLayout ({ children }){
         <>
             <Header />
          
-            <div className="vw-100 overflow-hidden my-4">{children}</div>
+            <div className="vw-100 overflow-hidden">{children}</div>
             <Footer />
         </>
     );
