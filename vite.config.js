@@ -17,8 +17,8 @@ export default defineConfig({
     },
     server: {
         host: 'localhost',
-        port: 3000,
-        open: 'http://localhost:3000',
+        port: 3001,
+        open: 'http://localhost:3001',
         //proxy: {
         //    '/static': {
         //        target: 'http://127.0.0.1:8080',

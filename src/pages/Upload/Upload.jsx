@@ -4,7 +4,7 @@ import styles from "./Upload.module.scss";
 import Button from "@mui/material/Button";
 import ClearIcon from "@mui/icons-material/Clear";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-
+import axios from 'axios';
 import get from "~/utils/request/get";
 import post from "~/utils/request/post";
 
@@ -42,15 +42,15 @@ const Upload = () => {
   const [categories, setCategories] = useState([
     {
       id: 1,
-      name: "Category 1",
+      name: "Công nghệ thông tin",
     },
     {
       id: 2,
-      name: "Category 2",
+      name: "Hệ thống thông tin quản lý",
     },
     {
       id: 3,
-      name: "Category 3",
+      name: "Khoa học máy tính",
     },
   ]);
   const [mentor, setMentor] = useState([
@@ -83,34 +83,35 @@ const Upload = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setDisableButton(true);
+    // setDisableButton(true);
 
-    const data = new FormData();
-    Object.entries(formData).map(([key, value] = entry) => {
-      switch (key) {
-        case "categories":
-          data.append(
-            key,
-            value.map((i) => categories[i].id)
-          );
-          break;
-        case "mentor":
-          data.append(
-            key,
-            value.map((i) => mentor[i].id)
-          );
-          break;
-        default:
-          data.append(key, value);
-          break;
-      }
-    });
-
-    post("documents/upload", data).then((res) => {
-      if (res.status === "200") {
+    // const data = new FormData();
+    // Object.entries(formData).map(([key, value] = entry) => {
+    //   switch (key) {
+    //     case "categories":
+    //       data.append(
+    //         key,
+    //         value.map((i) => categories[i].id)
+    //       );
+    //       break;
+    //     case "mentor":
+    //       data.append(
+    //         key,
+    //         value.map((i) => mentor[i].id)
+    //       );
+    //       break;
+    //     default:
+    //       data.append(key, value);
+    //       break;
+    //   }
+    // });
+    // console.log(data);
+    post("/api/documents/upload/", formData).then((res) => {
+      if (res.status === "OK") {
         alert("Upload tài liệu thành công");
-        setFormData(INIT_FORM_DATA);
-        setDisableButton(false);
+      }
+      else{
+        console.log("failed to upload")
       }
     });
   };
@@ -134,7 +135,7 @@ const Upload = () => {
             type="text"
             name="author"
             className="form-control"
-            placeholder="Tên người thực hiện khóa luận"
+            placeholder="Tên người thực hiện luận"
             value={formData.author}
             onChange={handleFileChange}
             required
@@ -153,7 +154,7 @@ const Upload = () => {
             required
           />
         </InputGroup>
-        <InputGroup title="Danh mục" info="">
+        <InputGroup title="Chọn ngành" info="">
           {formData.categories.map((c, index) => (
             <Button
               key={index}
@@ -188,7 +189,7 @@ const Upload = () => {
             }}
             required
           >
-            <option hidden>--Chọn danh mục--</option>
+            <option hidden>--Chọn ngành--</option>
             {categories.map((c, index) =>
               formData.categories.includes(index - 0) ? null : (
                 <option key={index} value={index}>
@@ -256,9 +257,9 @@ const Upload = () => {
         </InputGroup>
       </section>
       <section className="border border-info bg-info">
-        <input name="confirm" id="confirm" type="checkbox" />
+        {/* <input name="confirm" id="confirm" type="checkbox" /> */}
         <label htmlFor="confirm">
-          &nbsp;Tôi đã đọc và đồng ý với các điều khoản của BaToPho
+          &nbsp;Hãy kiểm tra các <span style={{color:'red', fontWeight:'600'}}>thông tin</span> trước khi đăng kí !
         </label>
         <br />
         <Button
