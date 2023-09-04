@@ -5,9 +5,9 @@ const get = async (path, options = {}, headerOptions = {}) => {
         const response = await request.get(path, options, { ...HEADER, ...headerOptions }).catch((err) => {
             throw err;
         });
-        return response.data;
+        return response;
     } catch (err) {
-        return { ...err.response.data, status: err.response.status };
+        return { ...err.response, status: err.response };
     }
 };
 

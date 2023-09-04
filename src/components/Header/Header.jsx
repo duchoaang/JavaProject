@@ -21,31 +21,6 @@ import post from '~/utils/request/post';
 import 'boxicons';
 
 
-const SubMenu = ({ data }) => {
-    return (
-        <li className={cx('sub-menu')}>
-              <Link to="/Documents">
-            <div className="d-flex align-items-center pb-2">
-                {data.icon ? (
-                    <span className="material-icons" style={{ color: '#1ab9f4' }}>
-                        {data.icon}
-                    </span>
-                ) : null}
-                <span style={{color:'black', fontWeight:'550'}} className="ms-1">{data.title}</span>
-                {data.subItem ? <span className="material-icons">arrow_drop_down</span> : null}
-            </div>
-            </Link>
-            <ul className="bg-white">
-                {data.subItem.map((title, index) => (
-                    <li key={index} className="py-2 ps-4 pe-3">
-                        {title}
-                    </li>
-                ))}
-            </ul>
-        </li>
-    );
-};
-
 const ModalWrapper = ({ show, children }) => {
     return <div className={cx('modal-wrapper', { show })}>{children}</div>;
 };
@@ -70,8 +45,6 @@ const Header = () => {
     const [checkButton, setCheckbutton] = useState(false);
     const [isFormValid, setIsFormValid] = useState(false);
     const [errorMessage, setErrorMessage] = useState(false);
-    const [confirmEmail, setConfirmEmail] = useState(false);
-    const [showUserControll, setUserControll] = useState(false);
     const [showAlertConfirmEmail, setShowAlertConfirmEmail] = useState(false);
     const [showLoading, setShowLoading] = useState(false);
     const [ErrorUserNameEmail, setErrorUserNameEmail] = useState(false);
@@ -87,29 +60,11 @@ const Header = () => {
     // };
     const open = Boolean(anchorEl);
   
-    useEffect(() => {
-        if(loginByGG) {
-         if (userGoogle != null) {
- 
-             axios
-             .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${userGoogle.access_token}`, {
-                     headers: {
-                         Authorization: `Bearer ${user.access_token}`,
-                         Accept: 'application/json',
-                     },
-                 })
-                 .then((res) => {
-                     setFormDataLoginGoogle(res.data);
-                     loginByGG(false)
-                     // setProfile(res.data);
-                 })
-                 .catch((err) => {});
-         }
-         else{
-            
-         }
-        }
-     },[loginByGG]);
+   
+
+
+
+
     const login = useGoogleLogin({
         onSuccess: (codeResponse) => {
             setUserGoogle(codeResponse);
@@ -139,17 +94,6 @@ const Header = () => {
                 });
         }
     }, [formDataLoginGoogle]);
-
-    const AlertConfirmEmailSucess = () => {
-        Swal.fire({
-            icon: 'success',
-            title: 'Đăng kí thành công',
-            text: 'Chúc bạn có một trải nghiệm tốt lành!',
-
-            willClose: setShowAlertConfirmEmail(false),
-        });
-    };
-
     const AlertConfirmEmail = () => {
         
         Swal.fire({
@@ -186,8 +130,8 @@ const Header = () => {
     });
     // form data dang nhap
     const [formDataLogin, setFormDataLogin] = useState({
-        username: userName,
-        password: userPassword,
+        taiKhoan: userName,
+        matKhau: userPassword,
     });
 
     const handleLogin = () => {
@@ -203,11 +147,11 @@ const Header = () => {
             });
         } else
             setFormDataLogin({
-                username: userName,
-                password: userPassword,
+                taiKhoan: userName,
+                matKhau: userPassword,
             });
     }, [userName, userEmail, userPassword]);
-
+    console.log(formDataLogin);
     const handleSubmit = (e) => {
         e.preventDefault();
         if (userPassword === confirmPassword) {
@@ -242,22 +186,25 @@ const Header = () => {
     // dang nhap
     const handleSubmitLogin = (e) => {
         e.preventDefault();
-        post('users/login', formDataLogin, { withCredentials: true })
+        console.log("da clcik")
+        post('api/login/', formDataLogin)
             .then((response) => {
-                setUser(true);
-                setInfoUser({
-                    id: response.id,
-                    username: response.username,
-                    avatar: response.avatar,
-                });  
-                setShowModal(false);
-                setLoginFailed(false);
-                window.location.reload();
+                console.log(response);
+                
+                // setUser(true);
+                // setInfoUser({
+                //     id: response.id,
+                //     username: response.username,
+                //     avatar: response.avatar,
+                // });  
+                // setShowModal(false);
+                // setLoginFailed(false);
+                // window.location.reload();
              
         })
             .catch((error) => {
                 setLoginFailed(true);
-        
+                console.log(error);
             });
     };
     const handleRegister = () => {
@@ -295,19 +242,7 @@ const Header = () => {
                 
             });
     };
-    useEffect(()=>{
-        get('current-user', { withCredentials: true }).then((response) => {
-            if (response.is_active === true) {
-               
-                setUser(true);
-                setInfoUser({
-                    id: response.id,
-                    username: response.username,
-                    avatar: response.avatar,
-                }); 
-            }
-        });
-    },[user]);
+    
 
     return (
         <>
@@ -508,6 +443,10 @@ const Header = () => {
                         <>
                             <Link to="/upload">
                                 <Button className="me-5 btn btn-warning border">Tải lên</Button>
+                            </Link>
+
+                            <Link to="/chat">
+                                <Button className="me-5 btn btn-primary border">Chat ngay</Button>
                             </Link>
 
                             <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>

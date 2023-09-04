@@ -102,7 +102,7 @@ const Home = () => {
               data-aos-delay="200"
               style={{cursor:'pointer'}}
             >
-              <StyleBorder class="border rounded p-3 bg-light mb-3">
+              <div class="border rounded p-3 bg-light mb-3">
                 <div class="text-center text-secondary display-3">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -121,7 +121,7 @@ const Home = () => {
                   Báo cáo các vấn đề liên quan đến khóa luận.
                  Báo cáo nếu có sự cố
                 </p>
-              </StyleBorder>
+              </div>
             </div>
             <div
               class="col-md-6 col-lg-3 text-center aos-init aos-animate"
@@ -181,8 +181,5 @@ const Home = () => {
     </>
   );
 };
-export const StyleBorder = styled.div`
-  background-color:red;
 
-`
 export default Home;

@@ -11,27 +11,27 @@ const Input = () => {
     const [showResult, setShowResult] = useState(false);
     const [resultsList, setResultsList] = useState([]);
 
-    useEffect(() => {
-        get('http://127.0.0.1:5000/api/documents')
+    // useEffect(() => {
+    //     get('http://127.0.0.1:5000/api/documents')
            
-            .then((json) => {
+    //         .then((json) => {
             
-                const results = json.filter((docs) => {
-                    return (
-                        inputValue &&
-                        docs &&
-                        docs.title &&
-                        docs.title.toLowerCase().includes(inputValue.toLowerCase())
-                    );
-                });
+    //             const results = json.filter((docs) => {
+    //                 return (
+    //                     inputValue &&
+    //                     docs &&
+    //                     docs.title &&
+    //                     docs.title.toLowerCase().includes(inputValue.toLowerCase())
+    //                 );
+    //             });
           
-                setResultsList(results);
-            });
-        if(inputValue.length > 0) {
-            setShowResult(true);
-        }
+    //             setResultsList(results);
+    //         });
+    //     if(inputValue.length > 0) {
+    //         setShowResult(true);
+    //     }
 
-    }, [inputValue]);
+    // }, [inputValue]);
     const handleChangeInput = (value) => {
         setInputValue(value);
         
