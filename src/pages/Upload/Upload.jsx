@@ -31,7 +31,7 @@ const InputGroup = ({ title, children, info }) => {
 const INIT_FORM_DATA = {
   studentCode: "",
   title: "",
-  major: [],
+  major: "",
   description: "",
   author: "",
   mentor: [],
@@ -185,36 +185,35 @@ const Upload = () => {
           />
         </InputGroup>
         <InputGroup title="Chọn ngành" info="">
-          {formData.major.map((c, index) => (
-            <Button
-              key={index}
+            {/* <Button
               size="small"
               variant="outlined"
               endIcon={<ClearIcon />}
               onClick={() => {
                 setFormData({
                   ...formData,
-                  major: (() => {
-                    formData.major.splice(index, 1);
-                    return formData.major;
-                  })(),
+                  major: "",
                 });
               }}
+              
             >
-              {categories[c].name}
-            </Button>
-          ))}
+            
+            </Button> */}
+          
           <select
-            name="categories"
-            id="categories"
+            name="mentor"
+            id="mentor"
             className="form-select"
             onChange={(e) => {
+              console.log(e.target.value);
               setFormData({
                 ...formData,
-                major: (() => {
-                  formData.major.push(e.target.value - 0);
-                  return formData.major;
-                })(),
+                major: e.target.value
+                // major: (() => {
+                //   formData.major.push(categories[e.target.value - 0].id);
+                //   // formData.major.push(categories[e.target.value - 0].id);
+                //   return formData.major;
+                // })(),
                 
               });
             }}
@@ -222,7 +221,7 @@ const Upload = () => {
           >
             <option hidden>--Chọn ngành--</option>
             {categories.map((c, index) =>
-              formData.major.includes(index - 0) ? null : (
+              categories.includes(index - 0) ? null : (
                 <option key={index} value={index}>
                   {c.name}
                 </option>
@@ -247,7 +246,7 @@ const Upload = () => {
                 });
               }}
             >
-              {/* {mentor[c].name} */}
+              {mentor[index].name}
             </Button>
           ))}
           <select
@@ -255,13 +254,11 @@ const Upload = () => {
             id="mentor"
             className="form-select"
             onChange={(e) => {
-
-              // console.log(formData.mentor);
               setFormData({
                 ...formData,
                 mentor: (() => {
                   // formData.mentor.push(e.target.value - 0);
-                  formData.mentor.push(mentor[e.target.value].id);
+                  formData.mentor.push(mentor[e.target.value - 0].id);
                   // mentor: [...formData.mentor, selectedId - 0],
                   return formData.mentor;
                 })(),
@@ -271,7 +268,7 @@ const Upload = () => {
           >
             <option hidden>--Chọn giảng viên--</option>
             {mentor.map((c, index) =>
-              formData.mentor.includes(index - 0) ? null : (
+              mentor.includes(index - 0) ? null : (
                 <option key={index} value={index}>
                   {c.name}
                 </option>
