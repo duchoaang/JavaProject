@@ -31,7 +31,7 @@ const InputGroup = ({ title, children, info }) => {
 const INIT_FORM_DATA = {
   studentCode: "",
   title: "",
-  major: "",
+
   description: "",
   author: "",
   mentor: [],
@@ -40,20 +40,7 @@ const INIT_FORM_DATA = {
 const Upload = () => {
   const [formData, setFormData] = useState(INIT_FORM_DATA);
   const [keywordTmp, setKeywordTmp] = useState("");
-  const [categories, setCategories] = useState([
-    {
-      id: 1,
-      name: "Công nghệ thông tin",
-    },
-    {
-      id: 2,
-      name: "Hệ thống thông tin quản lý",
-    },
-    {
-      id: 3,
-      name: "Khoa học máy tính",
-    },
-  ]);
+  
   const [mentor, setMentor] = useState([
     {
       id: 1,
@@ -184,51 +171,7 @@ const Upload = () => {
             required
           />
         </InputGroup>
-        <InputGroup title="Chọn ngành" info="">
-            {/* <Button
-              size="small"
-              variant="outlined"
-              endIcon={<ClearIcon />}
-              onClick={() => {
-                setFormData({
-                  ...formData,
-                  major: "",
-                });
-              }}
-              
-            >
-            
-            </Button> */}
-          
-          <select
-            name="mentor"
-            id="mentor"
-            className="form-select"
-            onChange={(e) => {
-              console.log(e.target.value);
-              setFormData({
-                ...formData,
-                major: e.target.value
-                // major: (() => {
-                //   formData.major.push(categories[e.target.value - 0].id);
-                //   // formData.major.push(categories[e.target.value - 0].id);
-                //   return formData.major;
-                // })(),
-                
-              });
-            }}
-            required
-          >
-            <option hidden>--Chọn ngành--</option>
-            {categories.map((c, index) =>
-              categories.includes(index - 0) ? null : (
-                <option key={index} value={index}>
-                  {c.name}
-                </option>
-              )
-            )}
-          </select>
-        </InputGroup>
+       
         <InputGroup title="Giảng viên" info="">
           {formData.mentor.map((c, index) => (
             <Button
