@@ -7,6 +7,7 @@ import Home  from '@pages/Home'
 import Upload  from '@pages/Upload'
 import Chat from '@pages/Chat'
 
+
 const routes = [
     {
         path: '/',
@@ -24,6 +25,7 @@ const routes = [
         component: Upload,
         layout: DefaultLayout,
     },
+ 
    
 ];
 

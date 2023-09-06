@@ -31,7 +31,7 @@ const InputGroup = ({ title, children, info }) => {
 const INIT_FORM_DATA = {
   studentCode: "",
   title: "",
-  categories: [],
+  major: [],
   description: "",
   author: "",
   mentor: [],
@@ -68,7 +68,7 @@ const Upload = () => {
       name: "Mentor 3",
     },
   ]);
-  console.log(formData)
+
   const [disableButton, setDisableButton] = useState(false);
   const handleFileChange = (e) => {
     setFormData({
@@ -98,14 +98,15 @@ const Upload = () => {
               else
                 tmp2.push({"id":id,"name":text});
             }
-            setMentor(tmp2);
+           setMentor(tmp2);
           });
         } catch (ex) {
           console.error(ex);
           console.log(123)
         }
       }, []);
-
+  
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     // setDisableButton(true);
@@ -131,6 +132,7 @@ const Upload = () => {
     //   }
     // });
     // console.log(data);
+    
     post("/api/documents/upload/", formData).then((res) => {
       console.log(res);
       if (res === "OK") {
@@ -141,6 +143,8 @@ const Upload = () => {
       }
     });
   };
+
+  console.log(formData);
 
   return (
     <form className={cx("wrapper")} method="POST" onSubmit={handleSubmit}>
@@ -181,7 +185,7 @@ const Upload = () => {
           />
         </InputGroup>
         <InputGroup title="Chọn ngành" info="">
-          {formData.categories.map((c, index) => (
+          {formData.major.map((c, index) => (
             <Button
               key={index}
               size="small"
@@ -190,9 +194,9 @@ const Upload = () => {
               onClick={() => {
                 setFormData({
                   ...formData,
-                  categories: (() => {
-                    formData.categories.splice(index, 1);
-                    return formData.categories;
+                  major: (() => {
+                    formData.major.splice(index, 1);
+                    return formData.major;
                   })(),
                 });
               }}
@@ -207,17 +211,18 @@ const Upload = () => {
             onChange={(e) => {
               setFormData({
                 ...formData,
-                categories: (() => {
-                  formData.categories.push(e.target.value - 0);
-                  return formData.categories;
+                major: (() => {
+                  formData.major.push(e.target.value - 0);
+                  return formData.major;
                 })(),
+                
               });
             }}
             required
           >
             <option hidden>--Chọn ngành--</option>
             {categories.map((c, index) =>
-              formData.categories.includes(index - 0) ? null : (
+              formData.major.includes(index - 0) ? null : (
                 <option key={index} value={index}>
                   {c.name}
                 </option>
@@ -242,7 +247,7 @@ const Upload = () => {
                 });
               }}
             >
-              {mentor[c].name}
+              {/* {mentor[c].name} */}
             </Button>
           ))}
           <select
@@ -250,13 +255,17 @@ const Upload = () => {
             id="mentor"
             className="form-select"
             onChange={(e) => {
+
+              // console.log(formData.mentor);
               setFormData({
                 ...formData,
                 mentor: (() => {
-                  formData.mentor.push(e.target.value - 0);
+                  // formData.mentor.push(e.target.value - 0);
+                  formData.mentor.push(mentor[e.target.value].id);
+                  // mentor: [...formData.mentor, selectedId - 0],
                   return formData.mentor;
                 })(),
-              });
+              });  
             }}
             required
           >
