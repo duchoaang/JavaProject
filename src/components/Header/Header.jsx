@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext,useReducer } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Header.module.scss';
@@ -17,8 +17,11 @@ import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import get from '~/utils/request/get';
 import post from '~/utils/request/post';
-
+import cookie from 'react-cookies'
 import 'boxicons';
+import MyUserReducer from "../Reducers/MyUserReducer";
+
+import { MyUserContext } from "../../App";
 
 
 const ModalWrapper = ({ show, children }) => {
@@ -28,13 +31,25 @@ const ModalWrapper = ({ show, children }) => {
 const UserController = ({ show, children }) => {
     return <div className={cx('user-controller', { show })}>{children}</div>;
 };
+
+const INIT_INFO_USER = {
+    name: "",
+    email: "",
+    nganh: "",
+    avt: "",
+}
 const Header = () => {
-    const [user, setUser] = useState(false);
-    const [userGoogle, setUserGoogle] = useState([]);
+    const [userActive, setUserActive] = useState(false);
+    const [user, dispatch] = useReducer(MyUserReducer, cookie.load("user") || null);
     const [anchorEl, setAnchorEl] = useState(null);
     const [infoUser, setInfoUser] = useState([]);
-    const [infoUserGoogle, setInfoUserGoogle] = useState([]);
-    const [formDataLoginGoogle, setFormDataLoginGoogle] = useState([]);
+    const [infoUserLogin, setInfoUserLogin] = useState([{
+        name: "",
+        email: "",
+        nganh: "",
+        avt: "",
+    }]);
+
     const [idUser, setIdUser] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [showRegister, setShowRegister] = useState(false);
@@ -50,71 +65,75 @@ const Header = () => {
     const [ErrorUserNameEmail, setErrorUserNameEmail] = useState(false);
     const [results, setResults] = useState([]);
     const [loginFailed, setLoginFailed] = useState(false);
-    const [loginByGG, setLoginByGG] = useState(false);
-    const [resendEmail, setResendEmail] = useState(false);
-    // const logOut = () => {
-    //     googleLogout();
-    //     setProfile(null);
-
-
-    // };
+ 
     const open = Boolean(anchorEl);
   
-   
 
-
+ // login gg
+ const [profileLoginGoogle, setProfileLoginGoogle] = useState([]);
+ const [infoUserGoogle, setInfoUserGoogle] = useState([]);
 
 
     const login = useGoogleLogin({
         onSuccess: (codeResponse) => {
-            setUserGoogle(codeResponse);
-            setLoginByGG(true);
+            setInfoUserGoogle(codeResponse);
+          
+            // setLoginByGG(true);
         },
 
         onError: (error) => console.log('Login Failed:', error),
     });
-    // gui thong tin user google len server
-    useEffect(() => {
-        if (formDataLoginGoogle.length !== 0) {
-            post('users/loginGoogle', formDataLoginGoogle, { withCredentials: true })
-                .then((response) => {
-                    setUser(true);
-                    setInfoUser({
-                        id: response.id,
-                        name: response.name,
-                        avatar: response.avatar,
-                    });
-                    setShowModal(false);
-                    setLoginFailed(false);
-                    window.location.reload();
-                })
-                .catch((error) => {
-                    // setLoginFailed(true);
-               
-                });
-        }
-    }, [formDataLoginGoogle]);
-    const AlertConfirmEmail = () => {
-        
-        Swal.fire({
-            title: 'Hãy xác thực email !',
-            html: 'Cảm ơn bạn đã đăng kí. Chúng tôi đã gửi một mã xác thực qua gmail, vui lòng xác thực để có thể sử dụng dịch vụ! .',
-            timer: 6000,
-            timerProgressBar: true,
-            didOpen: () => {
-                Swal.showLoading();
-            },
-            willClose: () => {
-                setShowAlertConfirmEmail(false); 
 
-            },
-        }).then((result) => {
-            /* Read more about handling dismissals below */
-            if (result.dismiss === Swal.DismissReason.timer) {
-              
+    
+    useEffect(
+        () => {
+            if (infoUserGoogle) {
+                axios
+                    .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${infoUserGoogle.access_token}`, {
+                        headers: {
+                            Authorization: `Bearer ${infoUserGoogle.access_token}`,
+                            Accept: 'application/json'
+                        }
+                    })
+                    .then((res) => {
+                        console.log(res);
+                        setProfileLoginGoogle(res.data);
+                    })
+                    .catch((err) => console.log(err));
             }
-        });
+        },
+        [ infoUserGoogle ]
+    );  
+        console.log(infoUserGoogle);
+        console.log(profileLoginGoogle)
+
+
+    // gui thong tin user google len server
+    // useEffect(() => {
+    //     if (formDataLoginGoogle.length !== 0) {
+    //         post('users/loginGoogle', formDataLoginGoogle, { withCredentials: true })
+    //             .then((response) => {
+    //                 setUser(true);
+    //                 setInfoUser({
+    //                     id: response.id,
+    //                     name: response.name,
+    //                     avatar: response.avatar,
+    //                 });
+    //                 setShowModal(false);
+    //                 setLoginFailed(false);
+    //                 window.location.reload();
+    //             })
+    //             .catch((error) => {
+    //                 // setLoginFailed(true);
+               
+    //             });
+    //     }
+    // }, [formDataLoginGoogle]);
+    const logOut = () => {
+        googleLogout();
+        setInfoUserGoogle(null);
     };
+ 
 
     useEffect(() => {
         setIsFormValid(
@@ -151,7 +170,7 @@ const Header = () => {
                 matKhau: userPassword,
             });
     }, [userName, userEmail, userPassword]);
-    console.log(formDataLogin);
+
     const handleSubmit = (e) => {
         e.preventDefault();
         if (userPassword === confirmPassword) {
@@ -181,43 +200,63 @@ const Header = () => {
                 .catch((error) => {});
         } else setErrorMessage(true);
     };
-    //search
-    // resend-confirm
-    // dang nhap
-    const handleSubmitLogin = (e) => {
+  
+    const handleSubmitLogin = async (e) => {
         e.preventDefault();
-        console.log("da clcik")
-        post('api/login/', formDataLogin)
-            .then((response) => {
-                console.log(response);
+
+        const process = async () => {
+            try {
+                let res = await post('/api/login/', formDataLogin)
+                console.log(res)
+                cookie.save("token", res);
                 
-                // setUser(true);
-                // setInfoUser({
-                //     id: response.id,
-                //     username: response.username,
-                //     avatar: response.avatar,
-                // });  
-                // setShowModal(false);
-                // setLoginFailed(false);
-                // window.location.reload();
-             
-        })
-            .catch((error) => {
-                setLoginFailed(true);
-                console.log(error);
-            });
+                
+                const headers = {
+                    'Authorization': cookie.load("token")
+                  };
+              
+                  const data = await get('/api/current-user/', {
+                    headers: headers
+                  })
+
+                  setInfoUserLogin({
+                    name: data.data.ten,
+                    email: data.data.email,
+                    nganhtml: data.data.nganh,
+                    avt: data.data.avatar,
+                  })
+                cookie.save("user", data);
+                setUserActive(true);
+                setShowModal(false);
+
+                dispatch({
+                    "type": "login",
+                    "payload": data
+                });
+                  
+            } catch (err) {
+                console.error(err);
+                alert("Sai thông tin đăng nhập!" );
+            }
+        }
+        
+        process();
     };
-    const handleRegister = () => {
-        setShowAlertConfirmEmail(false);
-        setErrorUserNameEmail(false);
-        setUserPassword('');
-        setUserEmail('');
-        setUserName('');
-        setConfirmPassword('');
-        setShowLoading(false);
-        setShowModal(false);
-        setShowRegister(true);
-    };
+    // let data = cookie.load("user") || null;
+   
+
+    useEffect(() => {
+        if(cookie.load("user")){
+            setInfoUserLogin({
+                name: user.data.ten,
+                email: user.data.email,
+                nganhtml: user.data.nganh,
+                avt: user.data.avatar,
+              })
+        }
+    },[]);
+   
+    console.log(infoUserLogin);
 
     const handleCancel = () => {
         setUserName('');
@@ -241,7 +280,40 @@ const Header = () => {
             .catch((error) => {
                 
             });
+
+       
+            dispatch({
+                "type": "logout"
+            });
+              
+        
     };
+    // useEffect(() => {
+    //     try {
+    //       get('/api/giangviens/',{ headers: { Authorization: cookie.load("token") }}).then((res) =>{
+    //         console.log(res);
+    //         // let tmp = res.data;
+    //         // let tmp2;
+    //         // let i = 1;
+    //         // console.log("thanh cong");
+    //         // for(let t of tmp){
+              
+    //         //   let text = t.ho + " " + t.ten;
+    //         //   let id = t.id;
+    //         //   if(i === 1) {
+    //         //     tmp2 = [{"id":id,"name":text}];
+    //         //     i++;
+    //         //   }
+    //         //   else
+    //         //     tmp2.push({"id":id,"name":text});
+    //         // }
+    //         // setMentor(tmp2);
+    //       });
+    //     } catch (ex) {
+    //       console.error(ex);
+    //       console.log(123)
+    //     }
+    //   }, []);
     
 
     return (
@@ -316,7 +388,7 @@ const Header = () => {
                     </form>
                     <p className="text-center mt-3">
                         Đây là lần đầu tiên của bạn?&nbsp;
-                        <b style={{ cursor: 'pointer' }} onClick={handleRegister}>
+                        <b style={{ cursor: 'pointer' }} >
                             Đăng ký ngay
                         </b>
                     </p>
@@ -439,7 +511,7 @@ const Header = () => {
                 </div>
 
                 <div className={cx('actions')}>
-                    {true ? (
+                    {user ? (
                         <>
                             <Link to="/upload">
                                 <Button className="me-5 btn btn-warning border">Tải lên</Button>
@@ -463,14 +535,14 @@ const Header = () => {
                                            
                                            
                                         <Avatar sx={{ width: 32, height: 32 }}>
-                                            <img className={cx('user_avatar')} src={infoUser.avatar} alt="" />
+                                            <img className={cx('user_avatar')} src={infoUserLogin.avt} alt="" />
                                         </Avatar>
                                         </Link>
                                     </IconButton>
                                 </Tooltip>
                             </Box>
                           
-                            <Button onClick={handleLogout}>Logout</Button>
+                            <Button  onClick={handleLogout}>Logout</Button>
                         </>
                     ) : (
                         <>
@@ -485,9 +557,7 @@ const Header = () => {
                                 Đăng nhập
                             </Btn>
 
-                            <Btn variant="contained" color="inherit" className="me" onClick={handleRegister}>
-                                Đăng ký
-                            </Btn>
+                           
                         </>
                     )}
                 </div>

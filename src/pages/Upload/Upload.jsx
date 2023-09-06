@@ -7,6 +7,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import axios from 'axios';
 import get from "~/utils/request/get";
 import post from "~/utils/request/post";
+import cookie from 'react-cookies'
 
 const cx = classNames.bind(styles);
 
@@ -77,9 +78,33 @@ const Upload = () => {
     });
   };
 
-  // useEffect(() => {
-  //     get('api/categories').then((data) => setCategories(data));
-  // }, []);
+
+    useEffect(() => {
+        try {
+          get('/api/giangviens/',{ headers: { Authorization: cookie.load("token") }}).then((res) =>{
+            console.log(res);
+            let tmp = res.data;
+            let tmp2;
+            let i = 1;
+            console.log("thanh cong");
+            for(let t of tmp){
+              
+              let text = t.ho + " " + t.ten;
+              let id = t.id;
+              if(i === 1) {
+                tmp2 = [{"id":id,"name":text}];
+                i++;
+              }
+              else
+                tmp2.push({"id":id,"name":text});
+            }
+            setMentor(tmp2);
+          });
+        } catch (ex) {
+          console.error(ex);
+          console.log(123)
+        }
+      }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
