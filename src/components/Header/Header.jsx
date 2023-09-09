@@ -206,7 +206,7 @@ const Header = () => {
             try {
                 let res = await post('/api/login/', formDataLogin)
             
-                cookie.save("token", res);
+                cookie.save("token", res.data);
                 
                 
                 const headers = {
@@ -218,10 +218,10 @@ const Header = () => {
                   })
                 console.log(data)
                   setInfoUserLogin({
-                    name: data.data.ten,
-                    email: data.data.email,
-                    nganhtml: data.data.nganh,
-                    avt: data.data.avatar,
+                    name: data.data.data.ten,
+                    email: data.data.data.email,
+                    nganhtml: data.data.data.nganh,
+                    avt: data.data.data.avatar,
                   })
                 cookie.save("user", data);
                 setUserActive(true);
