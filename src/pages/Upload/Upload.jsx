@@ -131,7 +131,7 @@ const Upload = () => {
     
     post("/api/documents/upload/", formData).then((res) => {
       console.log(res);
-      if (res === "OK") {
+      if (res.status === 200) {
         alert("Upload tài liệu thành công");
       }
       else{

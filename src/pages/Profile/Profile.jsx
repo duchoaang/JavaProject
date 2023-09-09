@@ -59,7 +59,7 @@ const Profile = () => {
   const [docsType, setDocsType] = useState("userDocs");
   const [listDocs, setListDocs] = useState([]);
   const [infoUserChange, setInfoUserChange] = useState({
-    matK: "",
+    matKhau: "",
     sdt: "",
   });
   const [user, dispatch] = useReducer(
@@ -108,9 +108,14 @@ const Profile = () => {
   console.log(user.data);
 
   const handleChangeInfo = () => {
-    post("/api/updateUser/", infoUserChange).then((res) => {
+    const headers = {
+      'Authorization': cookie.load("token")
+    };
+    post("/api/updateUser/", infoUserChange, {
+      headers: headers
+    }).then((res) => {
         
-        if (res === 200) {
+        if (res.status === 200) {
           alert("Update thong tin thanh cong ");
         }
         else{
@@ -195,7 +200,7 @@ const Profile = () => {
                       setInfoUserChange({
                         ...infoUserChange,
                         id: user.data.id,
-                        password: e.target.value,
+                        matKhau: e.target.value,
                       })
                     }
                   />

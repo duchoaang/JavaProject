@@ -206,7 +206,7 @@ const Header = () => {
             try {
                 let res = await post('/api/login/', formDataLogin)
             
-                cookie.save("token", res);
+                cookie.save("token", res.data);
                 
                 
                 const headers = {
