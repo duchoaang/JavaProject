@@ -104,9 +104,7 @@ const Header = () => {
         },
         [ infoUserGoogle ]
     );  
-        console.log(infoUserGoogle);
-        console.log(profileLoginGoogle)
-
+     
 
     // gui thong tin user google len server
     // useEffect(() => {
@@ -207,7 +205,7 @@ const Header = () => {
         const process = async () => {
             try {
                 let res = await post('/api/login/', formDataLogin)
-                console.log(res)
+            
                 cookie.save("token", res);
                 
                 
@@ -218,7 +216,7 @@ const Header = () => {
                   const data = await get('/api/current-user/', {
                     headers: headers
                   })
-
+                console.log(data)
                   setInfoUserLogin({
                     name: data.data.ten,
                     email: data.data.email,
@@ -255,8 +253,7 @@ const Header = () => {
               })
         }
     },[]);
-   
-    console.log(infoUserLogin);
+
 
     const handleCancel = () => {
         setUserName('');
@@ -288,33 +285,8 @@ const Header = () => {
               
         
     };
-    // useEffect(() => {
-    //     try {
-    //       get('/api/giangviens/',{ headers: { Authorization: cookie.load("token") }}).then((res) =>{
-    //         console.log(res);
-    //         // let tmp = res.data;
-    //         // let tmp2;
-    //         // let i = 1;
-    //         // console.log("thanh cong");
-    //         // for(let t of tmp){
-              
-    //         //   let text = t.ho + " " + t.ten;
-    //         //   let id = t.id;
-    //         //   if(i === 1) {
-    //         //     tmp2 = [{"id":id,"name":text}];
-    //         //     i++;
-    //         //   }
-    //         //   else
-    //         //     tmp2.push({"id":id,"name":text});
-    //         // }
-    //         // setMentor(tmp2);
-    //       });
-    //     } catch (ex) {
-    //       console.error(ex);
-    //       console.log(123)
-    //     }
-    //   }, []);
-    
+   
+   
 
     return (
         <>
@@ -531,7 +503,7 @@ const Header = () => {
                                         aria-haspopup="true"
                                         aria-expanded={open ? 'true' : undefined}
                                     >
-                                        <Link style={{ color: 'black' }} to={`/profile/${infoUser.id}`}>
+                                        <Link style={{ color: 'black' }} to={`/profile/`}>
                                            
                                            
                                         <Avatar sx={{ width: 32, height: 32 }}>

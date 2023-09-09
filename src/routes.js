@@ -6,7 +6,7 @@ import Header from '@/Header';
 import Home  from '@pages/Home'
 import Upload  from '@pages/Upload'
 import Chat from '@pages/Chat'
-
+import Profile from './pages/Profile/Profile';
 
 const routes = [
     {
@@ -25,6 +25,11 @@ const routes = [
         component: Upload,
         layout: DefaultLayout,
     },
+    {
+        path: '/profile',
+        component: Profile,
+        layout: DefaultLayout,
+    }
  
    
 ];

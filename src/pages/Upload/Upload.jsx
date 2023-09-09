@@ -8,7 +8,16 @@ import axios from 'axios';
 import get from "~/utils/request/get";
 import post from "~/utils/request/post";
 import cookie from 'react-cookies'
-
+import {
+  MDBCol,
+  MDBContainer,
+  MDBRow,
+  MDBCard,
+  MDBCardBody,
+  MDBCardImage,
+  MDBBreadcrumb,
+  MDBBreadcrumbItem,
+} from 'mdb-react-ui-kit';
 const cx = classNames.bind(styles);
 
 const InputGroup = ({ title, children, info }) => {
@@ -134,7 +143,18 @@ const Upload = () => {
   console.log(formData);
 
   return (
-    <form className={cx("wrapper")} method="POST" onSubmit={handleSubmit}>
+    <>
+       <MDBContainer className="py-5">
+                <MDBRow>
+                    <MDBCol>
+                        <MDBBreadcrumb className="bg-light rounded-3 p-3 mb-4">
+                             <h2 style={{margin: '0 auto', color:'red', fontWeight: '700'}}>Đăng kí khóa luận</h2>
+                        </MDBBreadcrumb>
+                    </MDBCol>
+                </MDBRow>
+
+            </MDBContainer>
+     <form className={cx("wrapper")} method="POST" onSubmit={handleSubmit}>
       <section className="border border-warning bg-warning">
         <InputGroup title="Mã số sinh viên" info="">
           <input
@@ -248,6 +268,8 @@ const Upload = () => {
         </Button>
       </section>
     </form>
+    </>
+   
   );
 };
 

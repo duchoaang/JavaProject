@@ -1,95 +1,166 @@
-import { useState, useEffect } from "react";
-import {database, ref, push, onValue} from '../../firebase';
+import { useState, useEffect, useReducer } from "react";
+
 import { set } from 'firebase/database';
+import MyUserReducer from "../../components/Reducers/MyUserReducer";
+import cookie from 'react-cookies'
+import { info } from "sass";
+import React, { Fragment, useContext } from 'react';
+import { collection, addDoc, getDocs, onSnapshot, query, where, } from "firebase/firestore"; 
+import {db} from  '../../firebase/firebase';
+import { addDocument } from "../../firebase/service";
 
 
-const Login = ({callback}) =>{
+
+const Login = () =>{
     const [name, setName] = useState("");
-    const handleClick = () => {
-        callback(name);
-    }
+   
     return (
         <>
-        <div>
-            <input type="text" value={name} onChange={(e) => {
-                setName(e.target.value);
-            }} />
-            <button onClick={handleClick}>Dang nhap</button>
-        </div>
+          <h1>hay dang nhap</h1>
         </>
     )
 }
 
+
+
 const ShowChat = ({ props }) => {
     const [inputMess, setInputMess] = useState("");
     const [messages, setMessages] = useState([]);
-  
+
     useEffect(() => {
-      const messagesRef = ref(database, 'message'); 
-      onValue(messagesRef, (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-          const messageList = Object.values(data);
-          setMessages(messageList);
-        }
-      });
-    }, []);
+      getMessages();
+    },[props])
   
-    const handleSendMessage = () => {
-      const newMessage = {
-        name: props,
-        message: inputMess,
-      };
-      push(ref(database, 'message'), newMessage);
-     setInputMess("");
-    };
-    const handleDeleteAllData = () => {
-        const rootRef = ref(database); // Đường dẫn tới nút gốc của database
-        set(rootRef, null)
-          .then(() => {
-            console.log('Tất cả dữ liệu đã được xóa thành công');
-          })
-          .catch((error) => {
-            console.error('Lỗi xóa dữ liệu:', error);
+    function getMessages() {
+      const messageRef = collection(db, 'messages');
+
+      getDocs(messageRef)
+      .then(response => {
+          const mess = response.docs.map(doc => ({
+            data: doc.data(),
+            id: doc.id,
+          }))
+          setMessages(mess)        })
+      .catch(e => console.log(e.message));
+      // onSnapshot(messageRef, (querySnapshot) => {
+      //   const mess = querySnapshot.docs.map((doc) => ({
+      //     data: doc.data(),
+      //     id: doc.id,
+      //   }));
+      //   setMessages(mess);
+      // });
+    }
+
+
+    // them messages 
+    const addMessage = async () => {
+       {
+        try {
+          const docRef = await addDoc(collection(db, 'message'), {
+            id: props.id,
+            message: inputMess,
+
           });
-      };
-  
+          console.log("Document written with ID: ", docRef.id);
+          setInputMess(""); 
+
+          getMessages(); 
+        } catch (e) {
+          console.error("Error adding document: ", e.message);
+        }
+      }
+    };
+
+    console.log(inputMess);
     return (
       <>
-        <h1>Hello {props}</h1>
-        <button onClick={handleDeleteAllData}>Xóa Toàn Bộ Dữ Liệu</button>
-        <ul> 
-          {messages.map((message, index) => (
-            <li key={index}>
-              <span>{message.name} : </span>
-              <span>{message.message}</span>
-            </li>
-          ))}
-        </ul>
-        <input
-          type="text"
-          value={inputMess}
-          onChange={(e) => setInputMess(e.target.value)}
-        />
-        <button onClick={handleSendMessage}>Gửi</button>
-      </>
+          <h1>Hello {props.name}</h1>
+          <input onChange={(e) => setInputMess(e.target.value)} type="text" />
+          <button onClick={addMessage}>Send</button>
+      <ul>
+        {
+          messages.map(mess => (
+            <>
+              <li>{mess.data.wedfqwde}</li>
+            </>
+              // mess.data.name.map(message => (
+                
+              //   <>
+              //     <li>message.name</li>
+              //   </>
+              // )) 
+          ))
+        }
+        1231
+      </ul>
+      
+    </>
     );
   }
   
 const Chat = () => {
     const [showChat, setShowChat] = useState(false);
+    const [infoUserLogin, setInfoUserLogin] = useState([]);
     const [name, setName] = useState("");
+    const [user, dispatch] = useReducer(MyUserReducer, cookie.load("user") || null);  
     const getName = (name) =>{
         setName(name);
         setShowChat(true);
     }
+
+    const checkIfUserExists = async (email) => {
+      const usersCollection = collection(db, "users");
+      const q = query(usersCollection, where("email", "==", email));
+      const querySnapshot = await getDocs(q);
+    
+      return !querySnapshot.empty;
+    };
+    const addUserIfNotExists = async () => {
+      const email = user.data.email;
+      const userExists = await checkIfUserExists(email);
+    
+      if (!userExists) {
+        try {
+          const docRef = await addDoc(collection(db, "users"), {
+            name: user.data.ten,
+            email: email,
+          });
+          console.log("Document written with ID: ", docRef.id);
+        } catch (e) {
+          console.error("Error adding document: ", e.message);
+        }
+      } else {
+        console.log("User already exists with email: ", email);
+      }
+    };
+    addUserIfNotExists();
+    
+
+
+    useEffect(() => {
+      if(user != null){
+        setInfoUserLogin({
+          id: user.data.id,
+          name : user.data.ten,
+          
+
+        })
+        setShowChat(true);
+
+      }
+      else {
+        setShowChat(false);
+      }
+    }, [])
+    
    
 
     return (
         <>
         <div className="App">
-            {!showChat && <Login callback={getName}/>}
-            {showChat &&  <ShowChat props={name} />}
+          {!showChat &&  <Login/>}
+
+            {user &&  <ShowChat props={infoUserLogin} />}
         </div>
         </>
     )
