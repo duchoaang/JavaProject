@@ -110,7 +110,7 @@ const Profile = () => {
   const handleChangeInfo = () => {
     post("/api/updateUser/", infoUserChange).then((res) => {
         
-        if (res === "OK") {
+        if (res === 200) {
           alert("Update thong tin thanh cong ");
         }
         else{
