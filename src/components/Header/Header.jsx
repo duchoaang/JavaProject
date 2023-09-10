@@ -22,7 +22,7 @@ import 'boxicons';
 import MyUserReducer from "../Reducers/MyUserReducer";
 
 import { MyUserContext } from "../../App";
-
+import Button2 from "@mui/material/Button";
 
 const ModalWrapper = ({ show, children }) => {
     return <div className={cx('modal-wrapper', { show })}>{children}</div>;
@@ -106,27 +106,7 @@ const Header = () => {
     );  
      
 
-    // gui thong tin user google len server
-    // useEffect(() => {
-    //     if (formDataLoginGoogle.length !== 0) {
-    //         post('users/loginGoogle', formDataLoginGoogle, { withCredentials: true })
-    //             .then((response) => {
-    //                 setUser(true);
-    //                 setInfoUser({
-    //                     id: response.id,
-    //                     name: response.name,
-    //                     avatar: response.avatar,
-    //                 });
-    //                 setShowModal(false);
-    //                 setLoginFailed(false);
-    //                 window.location.reload();
-    //             })
-    //             .catch((error) => {
-    //                 // setLoginFailed(true);
-               
-    //             });
-    //     }
-    // }, [formDataLoginGoogle]);
+
     const logOut = () => {
         googleLogout();
         setInfoUserGoogle(null);
@@ -148,7 +128,7 @@ const Header = () => {
     // form data dang nhap
     const [formDataLogin, setFormDataLogin] = useState({
         taiKhoan: userName,
-        matKhau: userPassword,
+        matKhau : userPassword,
     });
 
     const handleLogin = () => {
@@ -204,8 +184,10 @@ const Header = () => {
 
         const process = async () => {
             try {
+           
                 let res = await post('/api/login/', formDataLogin)
-            
+                
+                console.log(res.data)
                 cookie.save("token", res.data);
                 
                 
@@ -218,10 +200,10 @@ const Header = () => {
                   })
                 console.log(data)
                   setInfoUserLogin({
-                    name: data.data.data.ten,
-                    email: data.data.data.email,
-                    nganhtml: data.data.data.nganh,
-                    avt: data.data.data.avatar,
+                    name: data.data.ten,
+                    email: data.data.email,
+                    nganhtml: data.data.nganh,
+                    avt: data.data.avatar,
                   })
                 cookie.save("user", data);
                 setUserActive(true);
@@ -265,20 +247,22 @@ const Header = () => {
         setShowAlertConfirmEmail(false);
         setShowLoading(false);
     };
-    const handleLogout = () => {
-        post('users/logout', infoUser.id, { withCredentials: true })
-            .then((response) => {
-                setUser(false);
-                const url = 'http://localhost:3000/';
-                const link = document.createElement('a');
-                link.href = url;
-                link.click();
-             })
-            .catch((error) => {
-                
-            });
 
-       
+
+    const handleLogout = () => {
+        // post('users/logout', infoUser.id, { withCredentials: true })
+        //     .then((response) => {
+        //         setUser(false);
+        //         const url = 'http://localhost:3001/';
+        //         const link = document.createElement('a');
+        //         link.href = url;
+        //         link.click();
+        //      })
+        //     .catch((error) => {
+                
+        //     });
+
+        window.location.href = '/';
             dispatch({
                 "type": "logout"
             });
@@ -512,9 +496,10 @@ const Header = () => {
                                         </Link>
                                     </IconButton>
                                 </Tooltip>
+                                <Button2 style={{marginLeft:'10px'}} size="small" variant="contained" color="success"  onClick={handleLogout}>Logout</Button2>
                             </Box>
                           
-                            <Button  onClick={handleLogout}>Logout</Button>
+                           
                         </>
                     ) : (
                         <>

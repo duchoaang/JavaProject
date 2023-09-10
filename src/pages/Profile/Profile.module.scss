@@ -42,3 +42,32 @@
     margin-left: 10px;
     margin-top:10px;
 }
+.khoaLuan_wrapper{
+    // border:red solid 1px;
+    padding:10px;
+    h1{
+        display: flex;
+        text-align: center;
+        font-size: 24px;
+    }
+    h3{ 
+        display: flex;
+        margin-left:20px;
+        font-size:20px;
+        h4{
+            font-size: 20px;
+            margin-left:20px;
+        }
+    }
+}
+.khoaLuan_wrapper_header{
+    display: flex;
+    align-items: center;
+    padding:10px;
+    margin-left: 22px;
+    h3{
+
+        margin-left:20px;
+        font-size: 24px;
+    }
+}

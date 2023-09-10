@@ -8,6 +8,10 @@ import Button from "@mui/material/Button";
   href="https://fonts.googleapis.com/icon?family=Material+Icons"
   rel="stylesheet"
 ></link>;
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+/>;
 import List from "@mui/material/List";
 
 import ListItem from "@mui/material/ListItem";
@@ -36,6 +40,18 @@ import post from "~/utils/request/post";
 import patch from "~/utils/request/patch";
 import MyUserReducer from "../../components/Reducers/MyUserReducer";
 import cookie from "react-cookies";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import CallToActionIcon from "@mui/icons-material/CallToAction";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+
+import Typography from "@mui/material/Typography";
 
 const Profile = () => {
   const [value, setValue] = useState(0);
@@ -59,9 +75,10 @@ const Profile = () => {
   const [docsType, setDocsType] = useState("userDocs");
   const [listDocs, setListDocs] = useState([]);
   const [infoUserChange, setInfoUserChange] = useState({
-    matK: "",
+    matKhau: "",
     sdt: "",
   });
+  const [tinhTrangKhoaLuan, setTinhTrangKhoaLuan] = useState(false);
   const [user, dispatch] = useReducer(
     MyUserReducer,
     cookie.load("user") || null
@@ -72,7 +89,21 @@ const Profile = () => {
 
   useEffect(() => {
     if (user != null) {
+      
       setInfoUser({
+        id: user.data.id,
+        name: user.data.ten,
+        avt: user.data.avatar,
+      
+        nganh: user.data.nganh,
+      
+        email: user.data.email,
+      });
+    }
+    if(user.data.khoaLuanId != null){
+      setTinhTrangKhoaLuan(true);
+      setInfoUser({
+        ...infoUser,
         id: user.data.id,
         name: user.data.ten,
         avt: user.data.avatar,
@@ -81,13 +112,14 @@ const Profile = () => {
           ngayGhiNhan: user.data.khoaLuanId.ngayGhiNhan,
           ngayKetThuc: user.data.khoaLuanId.ngayKetThuc,
         },
-        nganh: user.data.nganh,
         giaoVu: {
           tenGiaoVu: user.data.khoaLuanId.giaoVuId.ten,
           email: user.data.khoaLuanId.giaoVuId.email,
         },
-        email: user.data.email,
-      });
+      })
+    }
+    else{
+      setTinhTrangKhoaLuan(false);
     }
   }, []);
   console.log(infoUserChange);
@@ -109,15 +141,13 @@ const Profile = () => {
 
   const handleChangeInfo = () => {
     post("/api/updateUser/", infoUserChange).then((res) => {
-        
-        if (res === 200) {
-          alert("Update thong tin thanh cong ");
-        }
-        else{
-          console.log("failed to update")
-        }
-      });
-  }
+      if (res === 200) {
+        alert("Update thong tin thanh cong ");
+      } else {
+        console.log("failed to update");
+      }
+    });
+  };
 
   return (
     <section style={{ backgroundColor: "#eee" }}>
@@ -188,14 +218,14 @@ const Profile = () => {
                     style={{ width: "96%" }}
                     size="small"
                     id="outlined-basic"
-                    placeholder="Số điện thoại"
+                    placeholder="Mật khẩu"
                     variant="outlined"
                     value={infoUserChange.password}
                     onChange={(e) =>
                       setInfoUserChange({
                         ...infoUserChange,
                         id: user.data.id,
-                        password: e.target.value,
+                        matKhau: e.target.value,
                       })
                     }
                   />
@@ -221,7 +251,12 @@ const Profile = () => {
                 </div>
               </Box>
               <div className={cx("btnChangeInfo")}>
-                <Button onClick ={handleChangeInfo} variant="contained" color="success" size="small">
+                <Button
+                  onClick={handleChangeInfo}
+                  variant="contained"
+                  color="success"
+                  size="small"
+                >
                   Lưu
                 </Button>
                 <Button variant="contained" color="inherit" size="small">
@@ -272,20 +307,91 @@ const Profile = () => {
                             <input className={cx('search')} type="text" placeholder="Tìm kiếm tài liệu của bạn..." />
                         </div> */}
             <div className="contentDocs">
-                <div>
-                    <h1>Tên khóa luận : {infoUser.infoKhoaLuan.tenHoiDong}</h1>
-                    <h3>Ngày ghi nhận : {infoUser.infoKhoaLuan.ngayGhiNhan}</h3>
-                    <h3>Ngày kết thúc : {infoUser.infoKhoaLuan.ngayKetThuc}</h3>
-                    <h3>Tên giáo vụ: {infoUser.giaoVu.tenGiaoVu}</h3>
-                    <h3>Email Giáo vụ: {infoUser.giaoVu.email}</h3>
-                    <button>Liên hệ giáo vụ</button>
-                </div>
-             
+             {
+              tinhTrangKhoaLuan && 
+              <List
+              key={1}
+              sx={{
+                height: "100%",
+                width: "100%",
+                bgcolor: "background.paper",
+              }}
+            >
+              <ListItem button>
+                <ListItemAvatar>
+                  <Avatar>
+                    <ImageIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <h1 className={cx("khoaLuan_wrapper_header")}>
+                      <CallToActionIcon />
+                      <h3>
+              
+                        Tên khóa luận : {infoUser.infoKhoaLuan.tenHoiDong}
+                      </h3>
+                    </h1>
+                  }
+                  secondary={
+                    <h1 className={cx("khoaLuan_wrapper")}>
+                      <h3>
+                        <AccessTimeFilledIcon />
+                        <h4>Ngày ghi nhận : </h4>
+                      </h3>
 
-              {/* {listDocs.map((docs, index) => (
-                                
-                              
-                            ))} */}
+                      <h3>
+                        <AccessTimeIcon />
+                        <h4>
+                          Ngày kết thúc : {infoUser.infoKhoaLuan.ngayKetThuc}
+                        </h4>{" "}
+                      </h3>
+                      <h3>
+                        <PersonOutlineIcon />{" "}
+                        <h4>Tên giáo vụ: {infoUser.giaoVu.tenGiaoVu}</h4>{" "}
+                      </h3>
+                      <h3>
+                        <MailOutlineIcon />{" "}
+                        <h4>Email Giáo vụ: {infoUser.giaoVu.email}</h4>
+                      </h3>
+                    </h1>
+                  }
+                ></ListItemText>
+              </ListItem>
+              <Divider variant="inset" component="li" />
+            </List>
+
+             }
+             {!tinhTrangKhoaLuan && <h1 style={{fontSize:'20px', marginTop:'10px'}}>Sinh viên chưa đăng kí khóa luận ! </h1>}
+              {/* <Card sx={{ maxWidth: 345 }}>
+                <CardMedia
+                  sx={{ height: 140 }}
+                  image="/static/images/cards/contemplative-reptile.jpg"
+                  title="green iguana"
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                    <CallToActionIcon />
+                    <h3> Tên khóa luận : {infoUser.infoKhoaLuan.tenHoiDong}</h3>
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button size="small">Share</Button>
+                  <Button size="small">Learn More</Button>
+                </CardActions>
+              </Card> */}
+              <div className={cx("khoaLuan_wrapper")}>
+                <h1></h1>
+
+                {tinhTrangKhoaLuan && <Button  variant="contained" color="warning" size="small">
+                  Liên hệ giáo vụ
+                </Button>}
+              </div>
+
+         
             </div>
           </MDBCol>
         </MDBRow>
