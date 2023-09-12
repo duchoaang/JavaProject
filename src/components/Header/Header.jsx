@@ -72,7 +72,7 @@ const Header = () => {
  // login gg
  const [profileLoginGoogle, setProfileLoginGoogle] = useState([]);
  const [infoUserGoogle, setInfoUserGoogle] = useState([]);
-
+const [loginGG, setLoginGG] = useState(false);
 
     const login = useGoogleLogin({
         onSuccess: (codeResponse) => {
@@ -96,8 +96,19 @@ const Header = () => {
                         }
                     })
                     .then((res) => {
-                        console.log(res);
+                        
                         setProfileLoginGoogle(res.data);
+                        setInfoUserLogin({
+                            name: res.data.given_name,
+                            email: res.data.email,
+                            nganh: "CNTT",
+                            avt: res.data.picture,
+                          })
+                       
+                        setUserActive(true);
+                        setLoginGG(true)
+                        setShowModal(false);
+                        
                     })
                     .catch((err) => console.log(err));
             }
@@ -105,10 +116,11 @@ const Header = () => {
         [ infoUserGoogle ]
     );  
      
-
+    console.log(profileLoginGoogle);
 
     const logOut = () => {
         googleLogout();
+        setLoginGG(false)
         setInfoUserGoogle(null);
     };
  
@@ -469,7 +481,7 @@ const Header = () => {
                 </div>
 
                 <div className={cx('actions')}>
-                    {user ? (
+                    {user || loginGG ? (
                         <>
                             <Link to="/upload">
                                 <Button className="me-5 btn btn-warning border">Tải lên</Button>
