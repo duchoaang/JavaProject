@@ -105,34 +105,15 @@ const Upload = () => {
   
   const handleSubmit = (e) => {
     e.preventDefault();
-    // setDisableButton(true);
-
-    // const data = new FormData();
-    // Object.entries(formData).map(([key, value] = entry) => {
-    //   switch (key) {
-    //     case "categories":
-    //       data.append(
-    //         key,
-    //         value.map((i) => categories[i].id)
-    //       );
-    //       break;
-    //     case "mentor":
-    //       data.append(
-    //         key,
-    //         value.map((i) => mentor[i].id)
-    //       );
-    //       break;
-    //     default:
-    //       data.append(key, value);
-    //       break;
-    //   }
-    // });
-    // console.log(data);
+  
     
     post("/api/documents/upload/", formData).then((res) => {
       console.log(res);
-      if (res === "OK") {
-        alert("Upload tài liệu thành công");
+      if (res == 200) {
+        alert("Upload khóa luận thành công");
+      }
+      else if(res == 403){
+        alert("Bạn đã đăng ký khóa luận rồi ");
       }
       else{
         console.log("failed to upload")

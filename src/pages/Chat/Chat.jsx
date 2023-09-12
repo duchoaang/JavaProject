@@ -83,7 +83,7 @@ function ShowChat({ props }) {
               name: messageData.name,
               message: messageData.noiDung,
               userId: messageData.userId,
-              roomId: messageData.roomId,
+              roomId: selectedRoomId,
               timestamp: messageData.timestamp,
             };
             messagesArray.push(messageWithSender);
@@ -97,7 +97,7 @@ function ShowChat({ props }) {
       };
     }
   }, [selectedRoomId]);
-
+ 
   const addMessage = async () => {
     try {
       const docRef = await addDoc(collection(db, "messages"), {
@@ -136,7 +136,7 @@ function ShowChat({ props }) {
   console.log(messages);
   return (
     <div>
-        <h1>Hello {props.name}</h1>
+      <h1>Hello {props.name}</h1>
       <MDBContainer fluid className="py-5" style={{ backgroundColor: "#eee" }}>
         <MDBRow>
           <MDBCol md="6" lg="5" xl="4" className="mb-4 mb-md-0">
@@ -144,12 +144,12 @@ function ShowChat({ props }) {
               <MDBCardBody>
                 <MDBTypography listUnStyled className="mb-0">
                   <div>
-                    <h2>Chọn phòng của bạn</h2>
+                    <h2>Chọn phòng</h2>
                     {rooms.map(
-                      (room) =>
-                        room.id == props.id && (
+                      (room, index) =>
+                        room.id == props.id && room.id != 24 && (
                           <button
-                            key={room.id}
+                            key={index}
                             onClick={() => setSelectedRoomId(room.id)} // Xác định phòng được chọn
                             style={{ cursor: "pointer" }}
                           >
@@ -160,44 +160,21 @@ function ShowChat({ props }) {
 
                     {props.id == 24 && (
                       <>
-                        {rooms.map((room) => (
+                        {rooms.map((room, index) => (
                           <>
                             <button
-                              key={room.id}
+                              key={index}
                               onClick={() => setSelectedRoomId(room.id)} // Xác định phòng được chọn
                               style={{ cursor: "pointer" }}
                             >
-                              {room.id}
+                              Phòng {room.id}
                             </button>
                           </>
                         ))}
                       </>
                     )}
                   </div>
-                  <li className="p-2">
-                    <a href="#!" className="d-flex justify-content-between">
-                      <div className="d-flex flex-row">
-                        <img
-                          src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp"
-                          alt="avatar"
-                          className="rounded-circle d-flex align-self-center me-3 shadow-1-strong"
-                          width="60"
-                        />
-                        <div className="pt-1">
-                          <p className="fw-bold mb-0">Brad Pitt</p>
-                          <p className="small text-muted">
-                            Lorem ipsum dolor sit.
-                          </p>
-                        </div>
-                      </div>
-                      <div className="pt-1">
-                        <p className="small text-muted mb-1">5 mins ago</p>
-                        <span className="text-muted float-end">
-                          <MDBIcon fas icon="check" />
-                        </span>
-                      </div>
-                    </a>
-                  </li>
+                
                 </MDBTypography>
               </MDBCardBody>
             </MDBCard>
@@ -205,45 +182,45 @@ function ShowChat({ props }) {
 
           <MDBCol md="6" lg="7" xl="8">
             <MDBTypography listUnStyled>
-              {messages.sort((a, b) => a.timestamp - b.timestamp).map((message) => (
-                <>
-                  {message.userId === props.id &&  <li class="d-flex justify-content-between mb-4">
-                    <MDBCard className="w-100">
-                      <MDBCardHeader className="d-flex justify-content-between p-3">
-                        <p class="fw-bold mb-0">{message.name}</p>
-                        <p class="text-muted small mb-0">
-                          <MDBIcon far icon="clock" /> 13 mins ago
-                        </p>
-                      </MDBCardHeader>
-                      <MDBCardBody>
-                        <p className="mb-0">
-                          {message.message}
-                        </p>
-                      </MDBCardBody>
-                    </MDBCard>
-                  </li>}
-                 
-                  {message.userId != props.id && 
-                    <>
-                    <li className="d-flex justify-content-between mb-4">
-                    <MDBCard>
-                      <MDBCardHeader className="d-flex justify-content-between p-3">
-                        <p className="fw-bold mb-0">{message.name}</p>
-                        <p className="text-muted small mb-0">
-                          <MDBIcon far icon="clock" /> 10 mins ago
-                        </p>
-                      </MDBCardHeader>
-                      <MDBCardBody>
-                        <p className="mb-0">
-                         {message.message}
-                        </p>
-                      </MDBCardBody>
-                    </MDBCard>
-                  </li>
-                    </>
-                  }
-                </>
-              ))}
+              {messages
+                .sort((a, b) => a.timestamp - b.timestamp)
+                .map((message) => (
+                  <>
+                    {message.userId === props.id && (
+                      <li class="d-flex justify-content-between mb-4">
+                        <MDBCard className="w-100">
+                          <MDBCardHeader className="d-flex justify-content-between p-3">
+                            <p class="fw-bold mb-0">{message.name}</p>
+                            <p class="text-muted small mb-0">
+                              <MDBIcon far icon="clock" /> 13 mins ago
+                            </p>
+                          </MDBCardHeader>
+                          <MDBCardBody>
+                            <p className="mb-0">{message.message}</p>
+                          </MDBCardBody>
+                        </MDBCard>
+                      </li>
+                    )}
+
+                    {message.userId != props.id && (
+                      <>
+                        <li className="d-flex justify-content-between mb-4">
+                          <MDBCard>
+                            <MDBCardHeader className="d-flex justify-content-between p-3">
+                              <p className="fw-bold mb-0">{message.name}</p>
+                              <p className="text-muted small mb-0">
+                                <MDBIcon far icon="clock" /> 10 mins ago
+                              </p>
+                            </MDBCardHeader>
+                            <MDBCardBody>
+                              <p className="mb-0">{message.message}</p>
+                            </MDBCardBody>
+                          </MDBCard>
+                        </li>
+                      </>
+                    )}
+                  </>
+                ))}
 
               <li className="bg-white mb-3">
                 {/* <MDBTextArea label="Message" id="textAreaExample" rows={4} /> */}
@@ -252,23 +229,20 @@ function ShowChat({ props }) {
                   type="text"
                 />
                 <button onClick={addMessage}>Send</button>
-                {props.id == 24 &&
-                <>
-                
-      <button onClick={deleteAllMessages}>Xóa tất cả tin nhắn</button></>
-                }
+                {props.id == 24 && (
+                  <>
+                    <button onClick={deleteAllMessages}>
+                      Xóa tất cả tin nhắn
+                    </button>
+                  </>
+                )}
               </li>
             </MDBTypography>
           </MDBCol>
         </MDBRow>
       </MDBContainer>
-    
 
       {/* Hiển thị dữ liệu từ state messages */}
-
-     
-
-     
     </div>
   );
 }
