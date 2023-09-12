@@ -139,7 +139,7 @@ function ShowChat({ props }) {
   console.log(messages);
   return (
     <div>
-      <h1>Hello {props.name}</h1>
+      <h1 style={{display:'flex', justifyContent:'center', color:'red'}}>Hello {props.name}</h1>
       <MDBContainer fluid className="py-5" style={{ backgroundColor: "#eee" }}>
         <MDBRow>
           <MDBCol md="6" lg="5" xl="4" className="mb-4 mb-md-0">
@@ -240,7 +240,7 @@ function ShowChat({ props }) {
                 <div className="action_btn" style={{marginTop:'10px', display:'flex', width:'70%', height:'40px', justifyContent:'flex-end'}}>
                   <Button2
                     variant="contained"
-                    color="secondary"
+                    color="primary"
                     style={{ marginLeft: "20px" }}
                     onClick={addMessage}
                   >

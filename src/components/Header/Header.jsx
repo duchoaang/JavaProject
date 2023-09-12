@@ -455,8 +455,10 @@ const Header = () => {
                 <div className={cx('logo')}>
                     <Link to="/">
                         <img src="/src/assets/logo.png" alt="Logo" className="w-150 h-100" />
+                        
                      
                     </Link>
+                    <h1>Hệ thống đăng kí khóa luận</h1>
                 </div>
                 <div className={cx('input', 'd-flex align-items-center')} style={{ height: '40%',width:'100%' }}>
                     <div className={cx('search')}>
@@ -496,7 +498,7 @@ const Header = () => {
                                         </Link>
                                     </IconButton>
                                 </Tooltip>
-                                <Button2 style={{marginLeft:'10px'}} size="small" variant="contained" color="success"  onClick={handleLogout}>Logout</Button2>
+                                <Button2 style={{marginLeft:'10px'}} size="small" variant="contained" color="inherit"  onClick={handleLogout}>Logout</Button2>
                             </Box>
                           
                            

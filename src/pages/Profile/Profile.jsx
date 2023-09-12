@@ -51,7 +51,7 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-
+import { Link } from 'react-router-dom';
 import Typography from "@mui/material/Typography";
 
 const Profile = () => {
@@ -183,12 +183,7 @@ const Profile = () => {
 
                 {(!infoUser.confirmEmail && (
                   <div className="d-flex justify-content-center mb-2">
-                    <Button
-                      variant="contained"
-                      style={{ fontSize: "13px", marginTop: "-10px" }}
-                    >
-                      Hỗ trợ
-                    </Button>
+                   
                   </div>
                 )) || (
                   <div className="d-flex justify-content-center mb-2">
@@ -277,22 +272,11 @@ const Profile = () => {
                 >
                   <Tab
                     name="userDocs"
-                    style={{ fontSize: "13px" }}
+                    style={{ fontSize: "16px" }}
                     // onClick={(e) => setDocsType(e.target.name)}
-                    label={`Xem khóa luận `}
+                    label={`THÔNG TIN  khóa luận `}
                   />
-                  <Tab
-                    name="waitDocs"
-                    style={{ fontSize: "13px" }}
-                    // onClick={(e) => setDocsType(e.target.name)}
-                    label={`Khóa luật chờ duyệt`}
-                  />
-                  <Tab
-                    name="resultDocs"
-                    style={{ fontSize: "13px" }}
-                    // onClick={(e) => setDocsType(e.target.name)}
-                    label={`Kết quả duyệt`}
-                  />
+                  
                   {/* <Tab
                                         name="favDocs"
                                         style={{ fontSize: '13px' }}
@@ -386,10 +370,10 @@ const Profile = () => {
               </Card> */}
               <div className={cx("khoaLuan_wrapper")}>
                 <h1></h1>
-
-                {tinhTrangKhoaLuan && <Button  variant="contained" color="warning" size="small">
+                <Link to="/chat">{tinhTrangKhoaLuan && <Button  variant="contained" color="warning" size="small">
                   Liên hệ giáo vụ
-                </Button>}
+                </Button>}</Link>
+                
               </div>
 
          
