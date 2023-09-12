@@ -11,6 +11,7 @@ export default defineConfig({
             { find: '@pages', replacement: path.resolve(__dirname, 'src/pages') },
             { find: '~', replacement: path.resolve(__dirname, 'src') },
         ],
+        mainFields: [],
     },
     build: {
         outDir: 'build',

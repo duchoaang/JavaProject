@@ -20,6 +20,7 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import ImageIcon from "@mui/icons-material/Image";
 import Divider from "@mui/material/Divider";
+import Moment from 'react-moment';
 import {
   MDBCol,
   MDBContainer,
@@ -337,13 +338,13 @@ const Profile = () => {
                     <h1 className={cx("khoaLuan_wrapper")}>
                       <h3>
                         <AccessTimeFilledIcon />
-                        <h4>Ngày ghi nhận : </h4>
+                        <h4>Ngày ghi nhận :  <Moment locale="vi" fromNow>{infoUser.infoKhoaLuan.ngayGhiNhan}</Moment> </h4>
                       </h3>
 
                       <h3>
                         <AccessTimeIcon />
                         <h4>
-                          Ngày kết thúc : {infoUser.infoKhoaLuan.ngayKetThuc}
+                          Ngày kết thúc : <Moment locale="vi" fromNow>{infoUser.infoKhoaLuan.ngayKetThuc}</Moment> 
                         </h4>{" "}
                       </h3>
                       <h3>

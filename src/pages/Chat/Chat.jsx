@@ -3,6 +3,7 @@ import { useState, useEffect, useReducer } from "react";
 import { set } from "firebase/database";
 import MyUserReducer from "../../components/Reducers/MyUserReducer";
 import cookie from "react-cookies";
+
 import { info } from "sass";
 import React, { Fragment, useContext } from "react";
 import {
@@ -31,6 +32,8 @@ import {
 } from "mdb-react-ui-kit";
 
 import styles from "./Chat.module.scss";
+import Button2 from "@mui/material/Button";
+import { Button } from "bootstrap";
 
 const Login = () => {
   const [name, setName] = useState("");
@@ -97,7 +100,7 @@ function ShowChat({ props }) {
       };
     }
   }, [selectedRoomId]);
- 
+
   const addMessage = async () => {
     try {
       const docRef = await addDoc(collection(db, "messages"), {
@@ -147,14 +150,17 @@ function ShowChat({ props }) {
                     <h2>Chọn phòng</h2>
                     {rooms.map(
                       (room, index) =>
-                        room.id == props.id && room.id != 24 && (
-                          <button
-                            key={index}
-                            onClick={() => setSelectedRoomId(room.id)} // Xác định phòng được chọn
-                            style={{ cursor: "pointer" }}
-                          >
-                            Phòng {room.id}
-                          </button>
+                        room.id == props.id &&
+                        room.id != 24 && (
+                          <>
+                            <button
+                              key={index}
+                              onClick={() => setSelectedRoomId(room.id)} // Xác định phòng được chọn
+                              style={{ cursor: "pointer" }}
+                            >
+                              Phòng {room.id}
+                            </button>
+                          </>
                         )
                     )}
 
@@ -174,7 +180,6 @@ function ShowChat({ props }) {
                       </>
                     )}
                   </div>
-                
                 </MDBTypography>
               </MDBCardBody>
             </MDBCard>
@@ -222,20 +227,38 @@ function ShowChat({ props }) {
                   </>
                 ))}
 
-              <li className="bg-white mb-3">
+              <li
+                className="bg-white mb-3"
+                style={{ display: "flex"}}
+              >
                 {/* <MDBTextArea label="Message" id="textAreaExample" rows={4} /> */}
                 <input
+                  style={{'margin-top':'20px', width:'100%', height:'30px', marginLeft:'50px', marginBottom:'10px'}}
                   onChange={(e) => setInputMess(e.target.value)}
                   type="text"
                 />
-                <button onClick={addMessage}>Send</button>
-                {props.id == 24 && (
-                  <>
-                    <button onClick={deleteAllMessages}>
-                      Xóa tất cả tin nhắn
-                    </button>
-                  </>
-                )}
+                <div className="action_btn" style={{marginTop:'10px', display:'flex', width:'70%', height:'40px', justifyContent:'flex-end'}}>
+                  <Button2
+                    variant="contained"
+                    color="secondary"
+                    style={{ marginLeft: "20px" }}
+                    onClick={addMessage}
+                  >
+                    Send
+                  </Button2>
+                  {props.id == 24 && (
+                    <>
+                      <Button2
+                        variant="contained"
+                        color="warning"
+                        style={{ marginLeft: "20px" }}
+                        onClick={deleteAllMessages}
+                      >
+                        Xóa tất cả tin nhắn
+                      </Button2>
+                    </>
+                  )}
+                </div>
               </li>
             </MDBTypography>
           </MDBCol>
